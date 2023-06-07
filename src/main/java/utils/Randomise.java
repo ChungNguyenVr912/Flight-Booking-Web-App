@@ -8,6 +8,7 @@ import model.Flight;
 import model.abstraction.AirPlane;
 import model.factory.AirPlaneFactory;
 import model.impl.Airlines;
+import model.impl.AirlinesCompany;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -20,7 +21,7 @@ public class Randomise {
     private static final double dayFlightPriceMulti = 1.15;
     private static final Random random = new Random();
     private static final List<AirPlane> airPlaneList;
-    private static final List<Airlines> airlinesList;
+    private static final List<AirlinesCompany> airlinesList;
     //    private static final HashMap<String, String> airPorts;
     private static final HashMap<String, Integer> airPortUnrealDistance;
 
@@ -42,8 +43,8 @@ public class Randomise {
         List<Flight> flightList = new ArrayList<>();
         int FID = 1;
         for (LocalDateTime departTime : setOfDepartTime) {
-            Airlines airlines = airlinesList.get(random.nextInt(airlinesList.size()));
-            String airLinesName = airlines.getFullName();
+            AirlinesCompany airlines = airlinesList.get(random.nextInt(airlinesList.size()));
+            String airLinesName = airlines.getName();
             double priceMulti = airlines.getPriceMulti();
             String[] route = randomLocation();
             String departure = route[0];
@@ -66,7 +67,7 @@ public class Randomise {
         return flightList;
     }
 
-    private static int getFlightDuration(String departure, String destination) {
+    public static int getFlightDuration(String departure, String destination) {
         final float timeMulti = 3.85f;
         final int baseFlyTime = 45;// in minute
         if (airPortUnrealDistance.containsKey(departure)

@@ -1,12 +1,17 @@
 package utils;
 
-import model.Flight;
+import dto.FlightCardDTO;
 
 import java.util.Comparator;
 
-public class FlightDepartComparator implements Comparator<Flight> {
+public class FlightDepartComparator implements Comparator<FlightCardDTO> {
+    private static final FlightDepartComparator instance = new FlightDepartComparator();
+    public static FlightDepartComparator getInstance() {
+        return instance;
+    }
+    private FlightDepartComparator() {}
     @Override
-    public int compare(Flight flight1, Flight flight2) {
-        return flight1.getDepartTime().compareTo(flight2.getDepartTime());
+    public int compare(FlightCardDTO flight1, FlightCardDTO flight2) {
+        return flight1.getSortDepartTime().compareTo(flight2.getSortDepartTime());
     }
 }

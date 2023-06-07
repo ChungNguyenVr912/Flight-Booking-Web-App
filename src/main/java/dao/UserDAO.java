@@ -3,11 +3,11 @@ package dao;
 import connection.JDBCConnection;
 import lombok.NoArgsConstructor;
 import model.abstraction.User;
-import model.impl.Admin;
-import model.impl.Airlines;
-import model.impl.Customer;
-import model.impl.Staff;
+import model.impl.*;
+import org.mindrot.jbcrypt.BCrypt;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,21 +20,22 @@ public class UserDAO {
     private static final String SELECT_USER_SQL
             = "select * from user where username = ?";
     private static final String SELECT_ALL_AIRLINES_SQL
-            = "select id,full_name,price_multi from user where role = 'airlines'";
+            = "select airlines_account_id,name, logo_img_url, price_multi from airlines_company";
     private static final String SELECT_USER_BY_EMAIL_SQL
             = "select username from user where email = ?";
     private static final String UPDATE_USER_SQL
             = "UPDATE user SET password = ?, full_name = ?, gender = ?, day_of_birth = ?, phone_number = ? WHERE id = ?";
 
-    public static List<Airlines> getAllAirlines() {
-        List<Airlines> airlinesList = new ArrayList<>();
+    public static List<AirlinesCompany> getAllAirlines() {
+        List<AirlinesCompany> airlinesList = new ArrayList<>();
         try (Connection connection = JDBCConnection.getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL_AIRLINES_SQL);
             while (resultSet.next()) {
-                airlinesList.add(Airlines.builder()
-                        .id(resultSet.getInt("id"))
-                        .fullName(resultSet.getString("full_name"))
+                airlinesList.add(AirlinesCompany.builder()
+                        .id(resultSet.getInt("airlines_account_id"))
+                        .name(resultSet.getString("name"))
+                        .logoImgUrl(resultSet.getString("logo_img_url"))
                         .priceMulti(resultSet.getDouble("price_multi"))
                         .build());
             }
@@ -55,9 +56,10 @@ public class UserDAO {
         }
         try (Connection connection = JDBCConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER_SQL)) {
+            String hashedPasword = BCrypt.hashpw(user.getPassWord(), BCrypt.gensalt(10, SecureRandom.getInstanceStrong()));
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPassWord());
+            statement.setString(3, hashedPasword);
             statement.setString(4, user.getFullName());
             if (user instanceof Customer) {
                 statement.setString(5, ((Customer) user).getGender());
@@ -67,6 +69,8 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Fail!");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -83,7 +87,6 @@ public class UserDAO {
                 String password = resultSet.getString("password");
                 String fullName = resultSet.getString("full_name");
                 String gender = resultSet.getString("gender");
-                double priceMulti = resultSet.getDouble("price_multi");
                 LocalDate dob = null;
                 LocalDate applyDay = null;
                 Date date = resultSet.getDate("day_of_birth");
@@ -128,7 +131,6 @@ public class UserDAO {
                             .email(email)
                             .passWord(password)
                             .fullName(fullName)
-                            .priceMulti(priceMulti)
                             .build();
                 }
             }

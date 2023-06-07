@@ -1,7 +1,11 @@
 package controller;
 
 import dao.FlightDAO;
+import dto.FlightCardDTO;
 import model.Flight;
+import utils.FlightClassComparator;
+import utils.FlightDepartComparator;
+import utils.FlightPriceComparator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@WebServlet(name = "flight_controller", value = "/flight_controller")
+@WebServlet(name = "flight_controller", value = "/flight")
 public class FlightServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null) action = "";
+        switch (action){
+            case "sort" ->  sortFlight(request, response);
+            default -> request.getRequestDispatcher("home.jsp").forward(request,response);
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if (action == null) action = "";
-        switch (action){
+        switch (action) {
             case "show_flights" -> searchFlight(request, response);
         }
     }
@@ -31,17 +45,39 @@ public class FlightServlet extends HttpServlet {
         String destination = request.getParameter("destination");
         String departString = request.getParameter("departDay");
         LocalDate departDay = null;
-        if (departString != null){
-            departDay = LocalDate.parse(departString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        if (!departString.equals("")) {
+            try {
+                departDay = LocalDate.parse(departString, DateTimeFormatter.ofPattern("yyyy-dd-MM"));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
-        List<Flight> flights = FlightDAO.selectFlight(departure,destination);
-        List<Flight> filteredFlights = new ArrayList<>();
-        if (departDay!=null){
-            for (Flight flight : flights) {
-                if (flight.getDepartTime().toLocalDate().equals(departDay)){
+        List<FlightCardDTO> flights = FlightDAO.getFlightCardDetail(departure, destination);
+        if (departDay != null) {
+            List<FlightCardDTO> filteredFlights = new ArrayList<>();
+            for (FlightCardDTO flight : flights) {
+                if (flight.getSortDepartTime().toLocalDate().equals(departDay)) {
                     filteredFlights.add(flight);
                 }
             }
+            flights = new ArrayList<>(filteredFlights);
         }
+        request.getSession().setAttribute("flightCards", flights);
+        request.getRequestDispatcher("search_flight.jsp").forward(request, response);
+    }
+
+    private void sortFlight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String sortType = request.getParameter("sortType");
+        List<FlightCardDTO> list = (List<FlightCardDTO>)request.getSession().getAttribute("flightCards");
+        switch (sortType){
+            case "best" -> {
+                list.sort(FlightPriceComparator.getInstance().reversed());
+                list.sort(FlightClassComparator.getInstance());
+            }
+            case "cheapest" -> list.sort(FlightPriceComparator.getInstance());
+            case "earliest" -> list.sort(FlightDepartComparator.getInstance());
+        }
+        request.getSession().setAttribute("flightCards", list);
+        request.getRequestDispatcher("search_flight.jsp").forward(request, response);
     }
 }

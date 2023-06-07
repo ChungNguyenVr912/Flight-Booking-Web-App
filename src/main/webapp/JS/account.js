@@ -12,7 +12,7 @@ inputUser.addEventListener("blur", function () {
     var value = inputUser.value;
     if (value !== "" && value !== null) {
         const request = new XMLHttpRequest();
-        request.open('post', 'http://localhost:8080/account', true);
+        request.open('post', 'http://localhost:8080/home', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
@@ -38,7 +38,7 @@ inputEmail.addEventListener("blur", function () {
     var value = inputEmail.value;
     if (value !== "" && value !== null) {
         const request = new XMLHttpRequest();
-        request.open('post', 'http://localhost:8080/account', true);
+        request.open('post', 'http://localhost:8080/home', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
@@ -62,7 +62,7 @@ inputEmail.addEventListener("blur", function () {
 
 // loginForm.addEventListener("submit", function () {
 //     const request = new XMLHttpRequest();
-//     request.open('post', 'http://localhost:8080/account', true);
+//     request.open('post', 'http://localhost:8080/home', true);
 //     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 //     request.onreadystatechange = function () {
 //         if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {

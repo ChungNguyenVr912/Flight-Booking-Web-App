@@ -20,7 +20,7 @@
 <body>
 
 <div class="overflow-hidden position-fixed min-vw-100" style="z-index: -1">
-    <img src="img/148566.jpg"
+    <img src="./img/148566.jpg"
          alt="background" style="width: 100%;" class="">
 </div>
 
@@ -37,7 +37,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item me-3">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="home">Home</a>
                     </li>
                     <li class="nav-item me-3">
                         <a class="nav-link" href="#">Link</a>
@@ -95,12 +95,12 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="account?action=profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="home?action=profile">Profile</a></li>
                             <li><a class="dropdown-item" href="">View booked ticket</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="account?action=logout">Log out</a></li>
+                            <li><a class="dropdown-item" href="home?action=logout">Log out</a></li>
                         </ul>
                     </div>
                 </c:if>
@@ -110,15 +110,15 @@
     </nav>
 </header>
 
-<div class="main-content container-fluid my-md-4 row d-flex justify-content-center">
+<div class="main-content container-fluid my-md-4 d-flex justify-content-center">
     <div class="col-8 mt-5">
         <div class="container-fluid d-flex" id="select-location">
-            <form action="flight_controller" method="post" class="form-control">
+            <form action="flight" method="post" class="form-control">
                 <input type="hidden" name="action" value="show_flights">
                 <div class="form-label"><h2>Where you want to go?</h2></div>
                 <label for="from">From:</label>
                 <%--                <jsp:useBean id="airports" scope="session" type="java.util.HashMap"/>--%>
-                <select class="form-select me-2" id="from" onchange="updateOptions2(this.value)" required>
+                <select class="form-select me-2" id="from" name="departure" onchange="updateOptions2(this.value)" required>
                     <option selected disabled value="">Select</option>
                     <c:forEach var="airports" items="${airports}">
                         <option value="<c:out value="${airports.key}"/>"><c:out
@@ -126,7 +126,7 @@
                     </c:forEach>
                 </select>
                 <label for="to">To:</label>
-                <select class="form-select me-2" id="to" onchange="updateOptions1(this.value)" required>
+                <select class="form-select me-2" id="to" name="destination" onchange="updateOptions1(this.value)" required>
                     <option selected disabled value="">Select</option>
                     <c:forEach var="airports" items="${airports}">
                         <option value="<c:out value="${airports.key}"/>"><c:out
@@ -165,7 +165,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
-                <form method="post" action="account" class="form-control needs-validation" novalidate>
+                <form method="post" action="home" class="form-control needs-validation" novalidate>
                     <input type="hidden" name="action" value="create_account">
                     <div class="row justify-content-center mb-4">
                         <div class="col-12">
@@ -247,7 +247,7 @@
 <div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="account" id="loginForm">
+            <form method="post" action="home" id="loginForm">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Sign In</h1>
                     <input type="hidden" name="action" value="login">
@@ -287,7 +287,7 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/d625a478fd.js" crossorigin="anonymous"></script>
-<script src="JS/account.js"></script>
+<script src="JS/account.js">
 <script src="JS/flight_control.js"></script>
 </body>
 </html>

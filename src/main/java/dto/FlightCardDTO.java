@@ -18,8 +18,11 @@ public class FlightCardDTO {
     private boolean withBusinessClass;
     private String departure;
     private String destination;
-    private LocalDateTime departTime;
-    private LocalDateTime arrivalTime;
+    private String departDate;
+    private String departTime;
+    private LocalDateTime sortDepartTime;
+    private String arrivalTime;
     private String flightTime;
-    private double basePrice;
+    private String basePrice;
+    private long sortBasePrice;
 }

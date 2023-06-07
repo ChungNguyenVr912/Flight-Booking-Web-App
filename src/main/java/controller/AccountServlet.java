@@ -4,6 +4,7 @@ import dao.AirPortDAO;
 import dao.UserDAO;
 import model.abstraction.User;
 import model.impl.Customer;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "flightBooking", value = "/account")
+@WebServlet(name = "flightBooking", urlPatterns = {"/home","/"})
 public class AccountServlet extends HttpServlet {
     private UserDAO userDAO;
 
@@ -29,7 +30,7 @@ public class AccountServlet extends HttpServlet {
         switch (action) {
             case "logout" -> {
                 request.getSession().setAttribute("user", null);
-                response.sendRedirect(request.getContextPath() + "home.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
             }
             default -> {
                 HashMap<String,String> airports = AirPortDAO.getAirPortName();
@@ -99,7 +100,7 @@ public class AccountServlet extends HttpServlet {
                     .gender(gender)
                     .build();
             userDAO.insertUser(newUser);
-            response.sendRedirect(request.getContextPath() + "home.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -113,11 +114,11 @@ public class AccountServlet extends HttpServlet {
             user = userDAO.getUser(username);
         }
         if (user != null) {
-            if (password.equals(user.getPassWord())) {
+            if (BCrypt.checkpw(password, user.getPassWord())) {
                 request.getSession().setAttribute("user", user);
             }
         }
-        String redirectUrl = request.getContextPath() + "home.jsp";
+        String redirectUrl = request.getContextPath() + "/home";
         response.sendRedirect(redirectUrl);
     }
 
