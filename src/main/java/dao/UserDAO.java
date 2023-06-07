@@ -56,10 +56,10 @@ public class UserDAO {
         }
         try (Connection connection = JDBCConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER_SQL)) {
-            String hashedPasword = BCrypt.hashpw(user.getPassWord(), BCrypt.gensalt(10, SecureRandom.getInstanceStrong()));
+            String hashedPassword = BCrypt.hashpw(user.getPassWord(), BCrypt.gensalt(10, SecureRandom.getInstanceStrong()));
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
-            statement.setString(3, hashedPasword);
+            statement.setString(3, hashedPassword);
             statement.setString(4, user.getFullName());
             if (user instanceof Customer) {
                 statement.setString(5, ((Customer) user).getGender());

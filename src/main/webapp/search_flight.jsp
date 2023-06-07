@@ -18,12 +18,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
-<body>
-
-<div class="overflow-hidden position-fixed min-vw-100" style="z-index: -1">
-    <img src="img/148566.jpg"
-         alt="background" style="width: 100%;" class="">
-</div>
+<body style="background-image: url('/img/148566.jpg'); background-repeat: repeat">
 <header class="header sticky-top">
     <nav class="navbar navbar-expand-lg bg-warning bg-gradient">
         <div class="container-fluid">
@@ -360,7 +355,7 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/d625a478fd.js" crossorigin="anonymous"></script>
-<%--<script src="JS/account.js"></script>--%>
-<script src="./JS/flight_control.js"></script>
+<script src="JS/account.js"></script>
+<script src="JS/flight_control.js"></script>
 </body>
 </html>
