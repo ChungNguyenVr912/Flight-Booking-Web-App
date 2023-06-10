@@ -14,10 +14,11 @@ import java.util.List;
 public class AirPlaneDAO {
     private static final String SELECT_ALL_PLANE
             = "select * from airplane";
+    private static final String SELECT_PLANE_SQL
+            = "select * from airplane where id = ?";
+
     private static final String INSERT_PLANE_SQL
             = "insert into airplane(name, type) VALUES (?,?)";
-    private static final String INSERT_SEAT_SQL
-            = "insert into seat(airplane_id,flight_id, seat_code, booked, price_multi) VALUES (?,?,?,?,?)";
 
     public static List<AirPlane> selectAllPlane() {
         List<AirPlane> airPlanes = new ArrayList<>();
@@ -62,52 +63,27 @@ public class AirPlaneDAO {
             e.printStackTrace();
         }
     }
-
-    public static void insertSeatList(List<Seat> seatList) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = JDBCConnection.getConnection();
-            statement = connection.prepareStatement(INSERT_SEAT_SQL);
-            connection.setAutoCommit(false);
-            int i = 0;
-            for (Seat seat : seatList) {
-                long airPlaneID = seat.getAirPlaneID();
-                String seatCode = seat.getSeatCode();
-                boolean booked = seat.isBooked();
-                double priceMulti = seat.getPriceMulti();
-                String flightID = seat.getFlightID();
-                statement.setLong(1, airPlaneID);
-                statement.setString(2, flightID);
-                statement.setString(3, seatCode);
-                statement.setBoolean(4, booked);
-                statement.setDouble(5, priceMulti);
-                statement.addBatch();
-                if (i == 1000) {
-                    i = 0;
-                    statement.executeBatch();
-                    statement.clearBatch();
+    public static AirPlane getAirplane(long id){
+        try (Connection connection = JDBCConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_PLANE_SQL)) {
+            statement.setLong(1,id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+                String type = resultSet.getString("type");
+                switch (type){
+                    case "business" -> {
+                        return BusinessAirplane.builder()
+                                .id(id).name(resultSet.getString("name")).build();
+                    }
+                    case "economy" -> {
+                        return EconomyAirplane.builder()
+                                .id(id).name(resultSet.getString("name")).build();
+                    }
                 }
-                i++;
             }
-            statement.executeBatch();
-            statement.clearBatch();
-            connection.commit();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-    }
-
-    public static List<Seat> getSeatListByFlightID(long airplaneID) {
-        return null;
+        return EconomyAirplane.builder().build();
     }
 }

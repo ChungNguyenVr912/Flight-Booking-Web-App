@@ -1,5 +1,6 @@
 import dao.AirPlaneDAO;
 import dao.FlightDAO;
+import dao.SeatDAO;
 import dao.UserDAO;
 import model.Flight;
 import model.abstraction.AirPlane;
@@ -33,13 +34,13 @@ public class Test {
 //        AirPlaneDAO.insertSeatList(seatList);
         LocalDateTime start = LocalDateTime.now();
         System.out.println("Start: " + start);
-        List<Flight> flights = Randomise.randomListFlights(5000);
+        List<Flight> flights = Randomise.randomListFlights(1000);
         List<Seat> seatList = new ArrayList<>();
         flights.forEach(flight ->
-                seatList.addAll(AirPlaneFactory.buildSeatList(getAirplane(flight.getAirPlaneID()), flight.getId())));
-
+                seatList.addAll(AirPlaneFactory
+                        .buildSeatList(getAirplane(flight.getAirPlaneID()), flight.getId())));
 //        FlightDAO.insertFlight(flights);
-//        AirPlaneDAO.insertSeatList(seatList);
+//        SeatDAO.insertSeatList(seatList);
         System.out.println("finally......................................");
         LocalDateTime end = LocalDateTime.now();
         Duration duration = Duration.between(start, end);

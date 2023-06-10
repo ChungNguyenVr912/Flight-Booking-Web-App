@@ -1,19 +1,19 @@
-package model.abstraction;
+package dto;
+
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-public class Seat {
+@Builder
+public class SeatDTO {
     private long id;
-    private long airPlaneID;
+    private String airplaneName;
     private String flightID;
     private String seatCode;
     private boolean booked;
-    private double priceMulti;
+    private double price;
     private String type;
 }

@@ -14,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "flightBooking", urlPatterns = {"/home","/"})
+@WebServlet(name = "flightBooking", urlPatterns = {"/home", "/"})
 public class AccountServlet extends HttpServlet {
     private UserDAO userDAO;
 
@@ -33,7 +33,7 @@ public class AccountServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
             }
             default -> {
-                HashMap<String,String> airports = AirPortDAO.getAirPortName();
+                HashMap<String, String> airports = AirPortDAO.getAirPortName();
                 request.getSession().setAttribute("airports", airports);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
                 dispatcher.forward(request, response);
@@ -88,19 +88,20 @@ public class AccountServlet extends HttpServlet {
             return false;
         }
     }
+
     private void createAccount(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-            String username = request.getParameter("username");
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String gender = request.getParameter("gender");
-            User newUser = Customer.builder()
-                    .userName(username)
-                    .email(email)
-                    .passWord(password)
-                    .gender(gender)
-                    .build();
-            userDAO.insertUser(newUser);
-            response.sendRedirect(request.getContextPath() + "/home");
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String gender = request.getParameter("gender");
+        User newUser = Customer.builder()
+                .userName(username)
+                .email(email)
+                .passWord(password)
+                .gender(gender)
+                .build();
+        userDAO.insertUser(newUser);
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
