@@ -9,7 +9,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Flight Booking</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -38,8 +38,8 @@
 <%@include file="./WEB-INF/view/header.jsp" %>
 
 <div class="main-content mt-2">
-    <form method="post" action="">
-        <jsp:useBean id="flightDTO" scope="request" type="dto.FlightCardDTO"/>
+    <form method="post" action="ticket?action=seatAndBaggageConfirm">
+        <jsp:useBean id="flightDTO" scope="session" type="dto.FlightDTO"/>
         <jsp:useBean id="airportName" scope="request" type="java.util.List"/>
         <jsp:useBean id="seatDtoList" scope="request" type="java.util.List<java.util.List<dto.SeatDTO>>"/>
         <input type="hidden" id="basePrice" value="${flightDTO.sortBasePrice}">

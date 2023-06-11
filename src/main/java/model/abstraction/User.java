@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public abstract class User{
-    protected int id;
+    protected long id;
     protected String userName;
     protected String email;
     protected String passWord;

@@ -1,7 +1,7 @@
 package dao;
 
 import connection.JDBCConnection;
-import dto.FlightCardDTO;
+import dto.FlightDTO;
 import model.Flight;
 import utils.FlightPriceComparator;
 import utils.MyDateTime;
@@ -114,8 +114,8 @@ public class FlightDAO {
         return flights;
     }
 
-    public static List<FlightCardDTO> getFlightCardDetail(String departure, String destination) {
-        List<FlightCardDTO> flightCardDTOList = new ArrayList<>();
+    public static List<FlightDTO> getFlightCardDetail(String departure, String destination) {
+        List<FlightDTO> flightDTOList = new ArrayList<>();
         try (Connection connection = JDBCConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_FLIGHT_CARD_DETAIL_SQL)) {
             statement.setString(1, departure);
@@ -129,10 +129,11 @@ public class FlightDAO {
                 String flightTime = duration / 60 + ":" + duration % 60;
                 String departDate = MyDateTime.toDayMonthYear(depart);
                 long basePrice = (long)resultSet.getDouble("base_price");
+                basePrice = basePrice - (basePrice%5000);
                 String type = resultSet.getString("airplane_type");
                 LocalDateTime now = LocalDateTime.now();
                 if (depart.isAfter(now)) {
-                    flightCardDTOList.add(FlightCardDTO.builder()
+                    flightDTOList.add(FlightDTO.builder()
                             .id(resultSet.getString("id"))
                             .flightCode(resultSet.getString("flight_code"))
                             .airlinesName(resultSet.getString("airlines_name"))
@@ -146,8 +147,7 @@ public class FlightDAO {
                             .departTime(departTime)
                             .arrivalTime(arrivalTime)
                             .flightTime(flightTime)
-                            .basePrice((new DecimalFormat("VND #,###,###"))
-                                    .format(basePrice - (basePrice%5000)))
+                            .basePrice((new DecimalFormat("VND #,###,###")).format(basePrice))
                             .sortBasePrice(basePrice)
                             .build());
                 }
@@ -156,11 +156,11 @@ public class FlightDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        flightCardDTOList.sort(FlightPriceComparator.getInstance());
-        return flightCardDTOList;
+        flightDTOList.sort(FlightPriceComparator.getInstance());
+        return flightDTOList;
     }
 
-    public static FlightCardDTO getFlightCardDTO(String flightID){
+    public static FlightDTO getFlightCardDTO(String flightID){
         try (Connection connection = JDBCConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_FLIGHT_CARD_BY_FLIGHTID)) {
             statement.setString(1, flightID);
@@ -175,10 +175,11 @@ public class FlightDAO {
                 String flightTime = duration / 60 + ":" + duration % 60;
                 String departDate = MyDateTime.toDayMonthYear(depart);
                 long basePrice = (long)resultSet.getDouble("base_price");
+                basePrice = basePrice - (basePrice%5000);
                 String type = resultSet.getString("airplane_type");
                 LocalDateTime now = LocalDateTime.now();
                 if (depart.isAfter(now)) {
-                    return FlightCardDTO.builder()
+                    return FlightDTO.builder()
                             .id(resultSet.getString("id"))
                             .flightCode(resultSet.getString("flight_code"))
                             .airlinesName(resultSet.getString("airlines_name"))
@@ -193,7 +194,7 @@ public class FlightDAO {
                             .arrivalTime(arrivalTime)
                             .flightTime(flightTime)
                             .basePrice((new DecimalFormat("VND #,###,###"))
-                                    .format(basePrice - (basePrice%5000)))
+                                    .format(basePrice))
                             .sortBasePrice(basePrice)
                             .build();
                 }

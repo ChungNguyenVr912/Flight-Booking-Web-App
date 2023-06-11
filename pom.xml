@@ -32,12 +32,11 @@
             <version>1.4.7</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.github.svendiedrichsen</groupId>
-            <artifactId>json-formatter-jackson2</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.svendiedrichsen</groupId>-->
+<!--            <artifactId>json-formatter-jackson2</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -46,7 +45,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.servlet.jsp/jsp-api -->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>

@@ -79,6 +79,6 @@
         </div>
     </nav>
 </header>
-<div class="position-fixed sticky-top" style="z-index: -1">
+<div class="position-fixed sticky-top" style="z-index: -2">
     <img src="https://cdn.discordapp.com/attachments/646934670679998474/1114882026542202920/148566.jpg" alt="background">
 </div>

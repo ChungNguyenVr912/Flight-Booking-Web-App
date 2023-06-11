@@ -18,7 +18,7 @@ public class UserDAO {
     private static final String INSERT_USER_SQL
             = "INSERT INTO user (username, email, password, full_name,gender, role) VALUES (?,?,?,?,?,?)";
     private static final String SELECT_USER_SQL
-            = "select * from user where username = ?";
+            = "select * from user where binary username = ?";
     private static final String SELECT_ALL_AIRLINES_SQL
             = "select airlines_account_id,name, logo_img_url, price_multi from airlines_company";
     private static final String SELECT_USER_BY_EMAIL_SQL
@@ -82,7 +82,7 @@ public class UserDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String role = resultSet.getString("role");
-                int id = resultSet.getInt("id");
+                long id = resultSet.getLong("id");
                 String email = resultSet.getString("email");
                 String password = resultSet.getString("password");
                 String fullName = resultSet.getString("full_name");

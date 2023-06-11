@@ -22,7 +22,6 @@ public class Randomise {
     private static final Random random = new Random();
     private static final List<AirPlane> airPlaneList;
     private static final List<AirlinesCompany> airlinesList;
-    //    private static final HashMap<String, String> airPorts;
     private static final HashMap<String, Integer> airPortUnrealDistance;
 
     static {
@@ -35,10 +34,10 @@ public class Randomise {
         return airPlaneList;
     }
 
-    public static List<Flight> randomListFlights(int quantity) {
+    public static List<Flight> randomListFlights(int quantity, int startDay, int numberOfDay) {
         Set<LocalDateTime> setOfDepartTime = new HashSet<>();
         while (setOfDepartTime.size() < quantity) {
-            setOfDepartTime.add(randomDepartTimeInNextNumberOfDay(10));
+            setOfDepartTime.add(randomDepartTimeInNextNumberOfDay(startDay, numberOfDay));
         }
         List<Flight> flightList = new ArrayList<>();
         int FID = 1;
@@ -97,11 +96,11 @@ public class Randomise {
         return new String[]{departure, destination};
     }
 
-    public static LocalDateTime randomDepartTimeInNextNumberOfDay(int days) {
+    public static LocalDateTime randomDepartTimeInNextNumberOfDay(int startDay, int numberOfDay) {
         int hour = random.nextInt(24);
         int minute = random.nextInt(6) * 10;
-        int day = random.nextInt(days) + 1;
-        return LocalDateTime.now().withHour(hour).withMinute(minute).withSecond(0).plusDays(day);
+        int day = random.nextInt(numberOfDay);
+        return LocalDateTime.now().withHour(hour).withMinute(minute).withSecond(0).withDayOfMonth(startDay).plusDays(day);
     }
 
     public static List<AirPlane> randomPlaneList(int quantity) {

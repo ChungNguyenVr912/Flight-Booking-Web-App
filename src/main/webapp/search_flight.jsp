@@ -1,6 +1,6 @@
 <%@ page import="model.abstraction.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="dto.FlightCardDTO" %>
+<%@ page import="dto.FlightDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -27,8 +27,7 @@
                 <input type="hidden" name="action" value="show_flights">
                 <div class="form-label"><h2>Where do you want to go?</h2></div>
                 <label for="from">From:</label>
-                <%--                <jsp:useBean id="airports" scope="session" type="java.util.HashMap"/>--%>
-                <%--                <c:set var="depart" value="${requestScope.departure}">--%>
+                <jsp:useBean id="airports" scope="session" type="java.util.HashMap"/>
                 <select class="form-select me-2" id="from" name="departure"
                         onchange="updateOptions2(this.value)" required>
                     <option disabled value="">Select</option>

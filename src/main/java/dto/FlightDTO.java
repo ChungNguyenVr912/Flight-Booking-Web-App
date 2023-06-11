@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class FlightCardDTO {
+public class FlightDTO {
     private String id;
     private String flightCode;
     private String airlinesName;

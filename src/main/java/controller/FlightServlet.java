@@ -2,7 +2,7 @@ package controller;
 
 import dao.AirPortDAO;
 import dao.FlightDAO;
-import dto.FlightCardDTO;
+import dto.FlightDTO;
 import dto.SeatDTO;
 import service.FlightService;
 import utils.FlightClassComparator;
@@ -26,11 +26,16 @@ import java.util.List;
 public class FlightServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action == null) action = "";
-        switch (action) {
-            case "sort" -> sortFlight(request, response);
-            default -> request.getRequestDispatcher("home.jsp").forward(request, response);
+        try {
+            String action = request.getParameter("action");
+            if (action == null) action = "";
+            switch (action) {
+                case "sort" -> sortFlight(request, response);
+                default -> request.getRequestDispatcher("home.jsp").forward(request, response);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            request.getRequestDispatcher("WEB-INF/view/404_page.jsp").forward(request,response);
         }
     }
 
@@ -51,15 +56,16 @@ public class FlightServlet extends HttpServlet {
     }
 
     private void doFlightSelected(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession().removeAttribute("flightCards");
         String flightID = request.getParameter("flightID");
         List<List<SeatDTO>> seatDTOList = FlightService.getListSeatDTO(flightID);
-        FlightCardDTO flightDTO = FlightDAO.getFlightCardDTO(flightID);
+        FlightDTO flightDTO = FlightDAO.getFlightCardDTO(flightID);
         HashMap<String,String> airportList = AirPortDAO.getAirPortName();
         List<String> airportName = new ArrayList<>();
         airportName.add(airportList.get((String)request.getSession().getAttribute("departure")));
         airportName.add(airportList.get((String)request.getSession().getAttribute("destination")));
         request.setAttribute("airportName",airportName);
-        request.setAttribute("flightDTO", flightDTO);
+        request.getSession().setAttribute("flightDTO", flightDTO);
         request.setAttribute("seatDtoList", seatDTOList);
         request.getRequestDispatcher("seat_select.jsp").forward(request, response);
     }
@@ -76,10 +82,10 @@ public class FlightServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        List<FlightCardDTO> flights = FlightDAO.getFlightCardDetail(departure, destination);
+        List<FlightDTO> flights = FlightDAO.getFlightCardDetail(departure, destination);
         if (departDay != null) {
-            List<FlightCardDTO> filteredFlights = new ArrayList<>();
-            for (FlightCardDTO flight : flights) {
+            List<FlightDTO> filteredFlights = new ArrayList<>();
+            for (FlightDTO flight : flights) {
                 if (flight.getSortDepartTime().toLocalDate().equals(departDay)) {
                     filteredFlights.add(flight);
                 }
@@ -94,7 +100,7 @@ public class FlightServlet extends HttpServlet {
 
     private void sortFlight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String sortType = request.getParameter("sortType");
-        List<FlightCardDTO> list = (List<FlightCardDTO>) request.getSession().getAttribute("flightCards");
+        List<FlightDTO> list = (List<FlightDTO>) request.getSession().getAttribute("flightCards");
         switch (sortType) {
             case "best" -> {
                 list.sort(FlightPriceComparator.getInstance().reversed());

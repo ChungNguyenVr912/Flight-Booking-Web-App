@@ -23,23 +23,27 @@ public class AccountServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String action = request.getParameter("action");
-        if (action == null) {
-            action = "";
-        }
-        switch (action) {
-            case "logout" -> {
-                request.getSession().setAttribute("user", null);
-                response.sendRedirect(request.getContextPath() + "/home");
+        try {
+            String action = request.getParameter("action");
+            if (action == null) {
+                action = "";
             }
-            default -> {
-                HashMap<String, String> airports = AirPortDAO.getAirPortName();
-                request.getSession().setAttribute("airports", airports);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
-                dispatcher.forward(request, response);
+            switch (action) {
+                case "logout" -> {
+                    request.getSession().setAttribute("user", null);
+                    response.sendRedirect(request.getContextPath() + "/home");
+                }
+                default -> {
+                    HashMap<String, String> airports = AirPortDAO.getAirPortName();
+                    request.getSession().setAttribute("airports", airports);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+                    dispatcher.forward(request, response);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            request.getRequestDispatcher("WEB-INF/view/404_page.jsp").forward(request,response);
         }
-
     }
 
     @Override

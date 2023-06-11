@@ -16,6 +16,7 @@ public class SeatDAO {
             = "insert into seat(airplane_id,flight_id, seat_code, booked, price_multi,type) VALUES (?,?,?,?,?,?)";
     private static final String SELECT_SEAT_LIST_SQL = "select * from seat where flight_id = ?";
     private static final String UPDATE_SEAT_SQL = "update seat set booked = true where id = ?";
+    private static final String SELECT_SEAT_SQL = "select * from seat where id = ?";
 
     public static List<Seat> selectSeatList(String flightID) {
         List<Seat> seatList = new ArrayList<>();
@@ -38,6 +39,28 @@ public class SeatDAO {
             e.printStackTrace();
         }
         return seatList;
+    }
+
+    public static Seat selectSeat(long seatID){
+        try (Connection connection = JDBCConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_SEAT_SQL)){
+            statement.setLong(1, seatID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+                return Seat.builder()
+                        .id(seatID)
+                        .airPlaneID(resultSet.getLong("airplane_id"))
+                        .flightID(resultSet.getString("flight_id"))
+                        .seatCode(resultSet.getString("seat_code"))
+                        .booked(resultSet.getBoolean("booked"))
+                        .priceMulti(resultSet.getDouble("price_multi"))
+                        .type(resultSet.getString("type"))
+                        .build();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void updateSeatStatus(long seatID){

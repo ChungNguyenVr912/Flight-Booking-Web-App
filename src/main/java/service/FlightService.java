@@ -9,7 +9,6 @@ import model.abstraction.Seat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class FlightService {
 
@@ -49,5 +48,15 @@ public class FlightService {
             i++;
         }
         return list;
+    }
+
+
+    public static boolean checkSeat(long seatID){
+        Seat seat = SeatDAO.selectSeat(seatID);
+        if (seat!=null){
+            return !seat.isBooked();
+        }else {
+            return false;
+        }
     }
 }

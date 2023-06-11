@@ -1,4 +1,4 @@
-<footer class="footer position-fixed py-4 sticky-bottom text-light min-vw-100" style="background-color: #05203c;">
+<footer class="footer position-fixed py-4 sticky-bottom text-light min-vw-100" style="background-color: rgb(0 16 40);">
   <div class="container-fluid">
     <div class="d-flex align-items-center justify-content-between small">
       <div>Copyright &copy; Chung Nguyen</div>
